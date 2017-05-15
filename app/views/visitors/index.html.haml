@@ -1,2 +1,186 @@
-%h3
-  Welcome
+.row
+  .col-12
+    %h3
+      Progress Bars as a Service!
+
+.row.step
+  .col-6
+    %h5
+      1: Create a channel that your progress bars will appear on.
+    %pre
+      GET /started
+  .col-6
+    %h5
+      Response
+    %pre
+      :preserve
+        {
+          "api_key":"5ce9be5a-2c70-4d6e-98d5-9a0d7d0af269",
+          "channel_name":"gentle-cape-7340"
+        }
+
+.row.step
+  .col-6
+    %h5
+      2: Create a task
+    %pre
+      POST /tasks
+      :preserve
+        {
+          "label":"rspec tests 2017-05-15 12:34:56",
+          "numerator":0,
+          "denominator":1423,
+          "unit":"tests",
+          "api_key":"5ce9be5a-2c70-4d6e-98d5-9a0d7d0af269"
+        }
+    %p
+      You can optionally set an "idle_expiration_duration" when creating a task. This will be the amount of time after the latest update before the task expires and is removed from your channel. If unset, this will default to "3 days".
+    %p
+      Valid expressions include:
+      .col-3
+        %ul
+          %li
+            "5 minutes"
+          %li
+            "10 minutes"
+          %li
+            "20 minutes"
+          %li
+            "30 minutes"
+      .col-3
+        %ul
+          %li
+            "1 hour"
+          %li
+            "2 hours"
+          %li
+            "5 hours"
+          %li
+            "12 hours"
+      .col-3
+        %ul
+          %li
+            "1 day"
+          %li
+            "2 days"
+          %li
+            "3 days"
+          %li
+            "1 week"
+  .col-6
+    %h5
+      Response
+    %pre
+      :preserve
+        {
+          "status":"'rspec tests 2017-05-15 12:34:56' is 0% complete",
+          "task_id":"250f025f-bc46-4255-a034-3ef382d66825"
+        }
+    %h5
+      People viewing your channel see:
+
+    rspec tests 2017-05-15 12:34:56
+    %progress.bar{max: 1423, value: 0}
+
+.row.step
+  .col-6
+    %h5
+      3: Update a task
+  .row
+    .col-6
+      %h5
+        Incrementing a certain amount
+      %pre
+        PUT /tasks
+        :preserve
+          {
+            "task_id":"250f025f-bc46-4255-a034-3ef382d66825",
+            "increment_by":333,
+            "api_key":"5ce9be5a-2c70-4d6e-98d5-9a0d7d0af269"
+          }
+    .col-6
+      %h5
+        Response
+      %pre
+        :preserve
+          {
+            "status":"'rspec tests 2017-05-15 12:34:56' is 23.4% complete"
+          }
+      %h5
+        People viewing your channel see:
+      rspec tests 2017-05-15 12:34:56
+      %progress.bar{max: 1423, value: 333}
+
+  .row
+    .col-6
+      %h5
+        Decrementing a certain amount
+      %pre
+        PUT /tasks
+        :preserve
+          {
+            "task_id":"250f025f-bc46-4255-a034-3ef382d66825",
+            "decrement_by":152,
+            "api_key":"5ce9be5a-2c70-4d6e-98d5-9a0d7d0af269"
+          }
+    .col-6
+      %h5
+        Response
+      %pre
+        :preserve
+          {
+            "status":"'rspec tests 2017-05-15 12:34:56' is 12.7% complete"
+          }
+      %h5
+        People viewing your channel see:
+      rspec tests 2017-05-15 12:34:56
+      %progress.bar{max: 1423, value: 181}
+
+  .row
+    .col-6
+      %h5
+        Setting the new numerator directly
+      %pre
+        PUT /tasks
+        :preserve
+          {
+            "task_id":"250f025f-bc46-4255-a034-3ef382d66825",
+            "numerator":1276,
+            "api_key":"5ce9be5a-2c70-4d6e-98d5-9a0d7d0af269"
+          }
+    .col-6
+      %h5
+        Response
+      %pre
+        :preserve
+          {
+            "status":"'rspec tests 2017-05-15 12:34:56' is 89.6% complete"
+          }
+      %h5
+        People viewing your channel see:
+      rspec tests 2017-05-15 12:34:56
+      %progress.bar{max: 1423, value: 1276}
+
+.row.step
+  .col-6
+    %h5
+      4: Delete a task
+    %pre
+      DELETE /tasks
+      :preserve
+        {
+          "task_id":"250f025f-bc46-4255-a034-3ef382d66825",
+          "api_key":"5ce9be5a-2c70-4d6e-98d5-9a0d7d0af269"
+        }
+    %p
+      Note: deleting tasks is not required. By default, they will automatically expire 3 days after the last update. You may configure this duration when creating tasks. New tasks appear at the top of your channel.
+  .col-6
+    %h5
+      Response
+    %pre
+      :preserve
+        {
+          "status":"'rspec tests 2017-05-15 12:34:56' deleted"
+        }
+    %h5
+      People viewing your channel see:
