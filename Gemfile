@@ -27,3 +27,7 @@ group :development, :test do
   gem 'pry-rescue'
   gem 'rubocop'
 end
+
+group :test do
+  gem 'rails-controller-testing'
+end
