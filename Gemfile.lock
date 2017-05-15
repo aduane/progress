@@ -236,6 +236,7 @@ DEPENDENCIES
   rails (~> 5.1.1)
   rails_apps_pages
   rails_layout
+  redis (~> 3.0)
   rubocop
   sass-rails (~> 5.0)
   selenium-webdriver
