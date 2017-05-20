@@ -79,8 +79,7 @@
     %h5
       People viewing your channel see:
 
-    rspec tests 2017-05-15 12:34:56
-    %progress.bar{max: 1423, value: 0}
+    = progress_bar(label: 'rspec tests 2017-05-15 12:34:56', numerator: 0, denominator: 1423, units: 'tests')
 
 .row.step
   .col-6
@@ -108,8 +107,8 @@
           }
       %h5
         People viewing your channel see:
-      rspec tests 2017-05-15 12:34:56
-      %progress.bar{max: 1423, value: 333}
+
+      = progress_bar(label: 'rspec tests 2017-05-15 12:34:56', numerator: 333, denominator: 1423, units: 'tests')
 
   .row
     .col-6
@@ -133,8 +132,8 @@
           }
       %h5
         People viewing your channel see:
-      rspec tests 2017-05-15 12:34:56
-      %progress.bar{max: 1423, value: 181}
+
+      = progress_bar(label: 'rspec tests 2017-05-15 12:34:56', numerator: 181, denominator: 1423, units: 'tests')
 
   .row
     .col-6
@@ -158,8 +157,8 @@
           }
       %h5
         People viewing your channel see:
-      rspec tests 2017-05-15 12:34:56
-      %progress.bar{max: 1423, value: 1276}
+
+      = progress_bar(label: 'rspec tests 2017-05-15 12:34:56', numerator: 1276, denominator: 1423, units: 'tests')
 
 .row.step
   .col-6
