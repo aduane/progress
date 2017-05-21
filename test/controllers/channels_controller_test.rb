@@ -16,12 +16,12 @@ class ChannelsControllerTest < ActionDispatch::IntegrationTest
     Task.new(label: 'task 1',
              numerator: 1,
              denominator: 2,
-             units: 'laps',
+             unit: 'laps',
              api_key: channel.api_key).save
     Task.new(label: 'task 2',
              numerator: 3,
              denominator: 4,
-             units: 'bottles',
+             unit: 'bottles',
              api_key: channel.api_key).save
     get channel_path(name: channel.name)
     assert_response :success

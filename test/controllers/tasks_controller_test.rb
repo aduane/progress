@@ -7,7 +7,7 @@ class TasksControllerTest < ActionDispatch::IntegrationTest
     @label = 'my test run'
     @numerator = 0
     @denominator = 2
-    @units = 'tests'
+    @unit = 'tests'
     @channel = Channel.create
     @api_key = @channel.api_key
   end
@@ -16,7 +16,7 @@ class TasksControllerTest < ActionDispatch::IntegrationTest
     post tasks_url, params: { label: @label,
                               numerator: @numerator,
                               denominator: @denominator,
-                              units: @units,
+                              unit: @unit,
                               api_key: @api_key }, as: :json
     assert_response :success
     assert_equal assigns(:task).status, JSON.parse(response.body)['status']
