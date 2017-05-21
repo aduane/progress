@@ -7,10 +7,7 @@ class Channel
   attr_accessor :api_key, :name
 
   def self.create
-    new_channel = new
-    self.name = generate_name while redis.get(new_channel.redis_key).present?
-    redis.set(new_channel.redis_key, new_channel.api_key)
-    new_channel
+    new.persist
   end
 
   def initialize
@@ -18,7 +15,28 @@ class Channel
     self.name = generate_name
   end
 
-  def redis_key
+  def persist
+    redis.set(channel_redis_key, api_key)
+    redis.lpush(task_list_redis_key, nil)
+    redis.set(api_key_redis_key, name)
+    self
+  end
+
+  # holds task ids
+  # used to know which tasks to show a viewer
+  def task_list_redis_key
+    "#{channel_redis_key}:tasks"
+  end
+
+  # holds the channel name
+  # used to know which channel a new task will be associated with
+  def api_key_redis_key
+    "api_key:#{api_key}"
+  end
+
+  # holds the api_key
+  # used with the task list to access the task data for displaying
+  def channel_redis_key
     "channel:#{name}"
   end
 
@@ -32,6 +50,10 @@ class Channel
   end
 
   private
+
+  def redis
+    @redis ||= Redis.new
+  end
 
   def generate_name
     [adjectives.sample, nouns.sample, random_number].join('-')
