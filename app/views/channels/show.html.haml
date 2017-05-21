@@ -1,3 +1,10 @@
-- @tasks.each do |task|
-  .task
-    = progress_bar(label: task.label, numerator: task.numerator, denominator: task.denominator, unit: task.unit)
+- if defined? @tasks
+  - @tasks.each do |task|
+    .task
+      = progress_bar(label: task.label, numerator: task.numerator, denominator: task.denominator, unit: task.unit)
+- else
+  .warning
+    Sorry!
+    %br
+    %small
+      We couldn't find that channel.

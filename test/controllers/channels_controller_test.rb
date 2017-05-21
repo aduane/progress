@@ -27,4 +27,11 @@ class ChannelsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_equal 2, assigns(:tasks).size
   end
+
+  test 'GETing a non-existant channel 404s' do
+    get channel_path(name: 'this-channel-does-not-exist')
+    assert_response :not_found
+    assert response.body.include? 'Sorry!'
+    assert response.body.include? 'We couldn\'t find that channel.'
+  end
 end

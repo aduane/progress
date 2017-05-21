@@ -13,10 +13,10 @@ class ChannelsController < ApplicationController
   # GET /channels/:name
   def show
     channel = Channel.find(params[:name])
-    @tasks = channel.tasks
     if channel
+      @tasks = channel.tasks
     else
-      redirect_to root_url, status: 404
+      render status: :not_found
     end
   end
 end

@@ -17,7 +17,7 @@ class Channel
 
   def self.find(channel_name)
     api_key = redis.get(channel_redis_key(channel_name))
-    new(name: channel_name, api_key: api_key)
+    new(name: channel_name, api_key: api_key) if api_key
   end
 
   def initialize(params = {})
