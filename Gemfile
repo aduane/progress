@@ -29,5 +29,7 @@ group :development, :test do
 end
 
 group :test do
+  gem 'mocha'
   gem 'rails-controller-testing'
+  gem 'shoulda-context'
 end

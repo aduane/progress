@@ -11,10 +11,16 @@ progress[value]::-webkit-progress-bar
 progress[value]::-webkit-progress-value
   background-color: blue
 
-.step
+progress.complete[value]::-webkit-progress-value
+  background-color: limegreen
+
+.step,.task
   background-color: #0CC2E8
   padding: 2%
   border-radius: 15px
+
+.task
+  margin-top: 60px
 
 body
   background-color: #008DFF

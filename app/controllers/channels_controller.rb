@@ -9,4 +9,14 @@ class ChannelsController < ApplicationController
       format.json { render json: @channel }
     end
   end
+
+  # GET /channels/:name
+  def show
+    channel = Channel.find(params[:name])
+    @tasks = channel.tasks
+    if channel
+    else
+      redirect_to root_url, status: 404
+    end
+  end
 end
