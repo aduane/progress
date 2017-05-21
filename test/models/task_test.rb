@@ -123,6 +123,63 @@ class TaskTest < ActiveSupport::TestCase
     end
   end
 
+  context 'progress update methods' do
+    setup do
+      @channel = Channel.create
+      @task = Task.new(label: 'my cool task',
+                       numerator: 4,
+                       denominator: 10,
+                       idle_expiration_duration: '1 hour',
+                       unit: 'steps',
+                       api_key: @channel.api_key).save
+    end
+
+    context '#overwrite_numerator' do
+      should 'update the numerator in the redis hash to the given value' do
+        @task.overwrite_numerator 6
+        assert_equal 6, Task.find(@channel.api_key, @task.id).numerator
+        @task.overwrite_numerator '3'
+        assert_equal 3, Task.find(@channel.api_key, @task.id).numerator
+        @task.overwrite_numerator 'socks'
+        assert_equal 0, Task.find(@channel.api_key, @task.id).numerator
+      end
+    end
+
+    context '#increment_numerator_by' do
+      should 'increment the numerator field in the redis hash' do
+        @task.increment_numerator_by 1
+        assert_equal 5, Task.find(@channel.api_key, @task.id).numerator
+        @task.increment_numerator_by '3'
+        assert_equal 8, Task.find(@channel.api_key, @task.id).numerator
+        @task.increment_numerator_by 'socks'
+        assert_equal 8, Task.find(@channel.api_key, @task.id).numerator
+      end
+
+      should 'not let the redis value be greater than the denominator' do
+        @task.increment_numerator_by 20
+        assert_equal 10, Task.find(@channel.api_key, @task.id).numerator
+        assert_equal '10', Redis.new.hmget(@task.redis_key, 'numerator').first
+      end
+    end
+
+    context '#decrement_numerator_by' do
+      should 'decrement the numerator field de the redis hash' do
+        @task.decrement_numerator_by 1
+        assert_equal 3, Task.find(@channel.api_key, @task.id).numerator
+        @task.decrement_numerator_by '2'
+        assert_equal 1, Task.find(@channel.api_key, @task.id).numerator
+        @task.decrement_numerator_by 'socks'
+        assert_equal 1, Task.find(@channel.api_key, @task.id).numerator
+      end
+
+      should 'not let the redis value be negative' do
+        @task.decrement_numerator_by 20
+        assert_equal 0, Task.find(@channel.api_key, @task.id).numerator
+        assert_equal '0', Redis.new.hmget(@task.redis_key, 'numerator').first
+      end
+    end
+  end
+
   context '#save' do
     setup do
       @channel = Channel.create

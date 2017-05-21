@@ -41,6 +41,31 @@ class Task
     @numerator = numerator.to_i >= 0 ? numerator.to_i : 0
   end
 
+  def overwrite_numerator(value)
+    self.numerator = value
+    redis.hset(redis_key, 'numerator', numerator)
+  end
+
+  def increment_numerator_by(value)
+    value_to_increment_by = [value.to_i, 0].max
+    @numerator += value_to_increment_by
+    if numerator > denominator
+      overwrite_numerator denominator
+    else
+      redis.hincrby(redis_key, 'numerator', value_to_increment_by)
+    end
+  end
+
+  def decrement_numerator_by(value)
+    value_to_increment_by = [value.to_i, 0].max * -1
+    @numerator += value_to_increment_by
+    if numerator.negative?
+      overwrite_numerator 0
+    else
+      redis.hincrby(redis_key, 'numerator', value_to_increment_by)
+    end
+  end
+
   def denominator=(denominator)
     # If the value as an int is greater than zero, use it. Use 1 otherwise.
     @denominator = denominator.to_i.positive? ? denominator.to_i : 1
