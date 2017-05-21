@@ -7,5 +7,12 @@ AllCops:
    - 'db/seeds.rb'
    - 'db/schema.rb'
    - 'vendor/bundle/**/*'
+Metrics/ClassLength:
+  Exclude:
+    - "**/*.rb"
+
+Metrics/BlockLength:
+  Exclude:
+    - "**/*_test.rb"
 Rails:
   Enabled: true
