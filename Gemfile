@@ -6,6 +6,7 @@ ruby '2.4.0'
 
 gem 'coffee-rails', '~> 4.2'
 gem 'haml-rails'
+gem 'jquery-rails'
 gem 'pg'
 gem 'puma', '~> 3.7'
 gem 'rails', '~> 5.1.1'
