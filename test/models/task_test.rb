@@ -174,7 +174,8 @@ class TaskTest < ActiveSupport::TestCase
       should 'not let the redis value be greater than the denominator' do
         @task.increment_numerator_by 20
         assert_equal 10, Task.find(@channel.api_key, @task.id).numerator
-        assert_equal '10', Redis.new.hmget(@task.redis_key, 'numerator').first
+        assert_equal '10',
+                     Redis.current.hmget(@task.redis_key, 'numerator').first
       end
     end
 
@@ -191,7 +192,8 @@ class TaskTest < ActiveSupport::TestCase
       should 'not let the redis value be negative' do
         @task.decrement_numerator_by 20
         assert_equal 0, Task.find(@channel.api_key, @task.id).numerator
-        assert_equal '0', Redis.new.hmget(@task.redis_key, 'numerator').first
+        assert_equal '0',
+                     Redis.current.hmget(@task.redis_key, 'numerator').first
       end
     end
   end
@@ -208,11 +210,11 @@ class TaskTest < ActiveSupport::TestCase
     end
 
     should 'write the attrs to a redis hash' do
-      assert_difference -> { Redis.new.keys.count }, 1 do
+      assert_difference -> { Redis.current.keys.count }, 1 do
         @task.save
       end
 
-      task_attr_hash = Redis.new.hgetall(@task.redis_key)
+      task_attr_hash = Redis.current.hgetall(@task.redis_key)
       assert_equal @task.label, task_attr_hash['label']
       assert_equal @task.numerator, task_attr_hash['numerator'].to_i
       assert_equal @task.denominator, task_attr_hash['denominator'].to_i

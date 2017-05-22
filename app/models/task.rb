@@ -105,7 +105,7 @@ class Task
 
   private_class_method
   def self.redis
-    @redis ||= Redis.new
+    @redis ||= Redis.current
   end
 
   private
@@ -115,7 +115,7 @@ class Task
   end
 
   def redis
-    @redis ||= Redis.new
+    @redis ||= Redis.current
   end
 
   def generate_id

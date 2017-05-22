@@ -9,7 +9,7 @@ module ActiveSupport
     fixtures :all
 
     def teardown
-      Redis.new.flushdb
+      Redis.current.flushdb
     end
   end
 end

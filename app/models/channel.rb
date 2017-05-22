@@ -77,7 +77,7 @@ class Channel
 
   private_class_method
   def self.redis
-    @redis ||= Redis.new
+    @redis ||= Redis.current
   end
 
   private_class_method
@@ -97,7 +97,7 @@ class Channel
   private
 
   def redis
-    @redis ||= Redis.new
+    @redis ||= Redis.current
   end
 
   def generate_name

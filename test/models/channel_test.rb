@@ -20,8 +20,8 @@ class ChannelTest < ActiveSupport::TestCase
 
   test '#task_list' do
     channel = Channel.create
-    Redis.new.lpush channel.task_list_redis_key, '123abc'
-    assert_equal Redis.new.lrange(channel.task_list_redis_key, 0, -2),
+    Redis.current.lpush channel.task_list_redis_key, '123abc'
+    assert_equal Redis.current.lrange(channel.task_list_redis_key, 0, -2),
                  channel.task_list
   end
 
@@ -42,12 +42,12 @@ class ChannelTest < ActiveSupport::TestCase
   end
 
   test '::create' do
-    assert_difference -> { Redis.new.keys.count }, 3 do
+    assert_difference -> { Redis.current.keys.count }, 3 do
       @channel = Channel.create
     end
-    assert Redis.new.get(@channel.channel_redis_key)
-    assert Redis.new.llen(@channel.task_list_redis_key)
-    assert Redis.new.get(@channel.api_key_redis_key)
+    assert Redis.current.get(@channel.channel_redis_key)
+    assert Redis.current.llen(@channel.task_list_redis_key)
+    assert Redis.current.get(@channel.api_key_redis_key)
   end
 
   test '::find' do
