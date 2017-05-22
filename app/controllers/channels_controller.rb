@@ -15,6 +15,7 @@ class ChannelsController < ApplicationController
     channel = Channel.find(params[:name])
     if channel
       @tasks = channel.tasks
+      @channel_name = channel.name
     else
       render status: :not_found
     end

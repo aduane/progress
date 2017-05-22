@@ -90,6 +90,10 @@ class Task
     "'#{label}' is #{progress_as_percentage} complete"
   end
 
+  def channel_name
+    @channel_name ||= redis.get(Channel.api_key_redis_key(api_key))
+  end
+
   def redis_key
     Task.redis_key api_key, id
   end

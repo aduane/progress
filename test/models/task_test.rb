@@ -116,6 +116,22 @@ class TaskTest < ActiveSupport::TestCase
     end
   end
 
+  context 'channel_name' do
+    setup do
+      @channel = Channel.create
+      @task = Task.new(label: 'my cool task',
+                       numerator: 4,
+                       denominator: 10,
+                       idle_expiration_duration: '1 hour',
+                       unit: 'steps',
+                       api_key: @channel.api_key).save
+    end
+
+    should 'be the channel associated with the api key' do
+      assert_equal @channel.name, @task.channel_name
+    end
+  end
+
   context '#status' do
     should 'be a human readable description of the progress' do
       task = Task.new label: 'cool task', numerator: 1, denominator: 2

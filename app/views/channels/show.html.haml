@@ -1,10 +1,53 @@
 - if defined? @tasks
   - @tasks.each do |task|
-    .task
+    %div{class: "task #{task.id}"}
       = progress_bar(label: task.label, numerator: task.numerator, denominator: task.denominator, unit: task.unit)
+
+  .progress-template.hidden
+    .task
+      = progress_bar(label: 'template', numerator: 0, denominator: 1, unit: 'template')
+
+  :coffee
+    App.progress = App.cable.subscriptions.create channel: "ProgressChannel", name: "#{@channel_name}",
+      connected: ->
+        # Called when the subscription is ready for use on the server
+
+      disconnected: ->
+        # Called when the subscription has been terminated by the server
+
+      received: (data) ->
+        # Called when there's incoming data on the websocket for this channel
+        if data.event_type == 'new'
+          $('.container').append(new_progress_bar(data))
+        else if data.event_type == 'update'
+          update_progress_bar(data)
+
+    update_progress_bar = (data) ->
+      percent = ((data.numerator / data.denominator) * 100).toFixed(1)
+      status_message = data.numerator + " / " + data.denominator + " " + data.unit +  " – " + percent + "% complete"
+      $(".task." + data.id).find('span.task-status').text(status_message)
+      $(".task." + data.id).find('progress').attr('max', data.denominator).attr('value', data.numerator)
+      if data.numerator == data.denominator
+        $(".task." + data.id).find('progress').addClass('complete')
+      else
+        $(".task." + data.id).removeClass('complete')
+
+    new_progress_bar = (data) ->
+      percent = ((data.numerator / data.denominator) * 100).toFixed(1)
+      status_message = data.numerator + " / " + data.denominator + " " + data.unit +  " – " + percent + "% complete"
+      cloned = $('.progress-template').clone()
+      cloned.find('span.task-label').text(data.label)
+      cloned.find('span.task-status').text(status_message)
+      cloned.find('progress').attr('max', data.denominator).attr('value', data.numerator)
+      if data.numerator == data.denominator
+        cloned.find('progress').addClass('complete')
+      prepared = cloned.find('.task').addClass(data.id)
+      $('.container').prepend(prepared)
+
 - else
   .warning
     Sorry!
     %br
     %small
       We couldn't find that channel.
+

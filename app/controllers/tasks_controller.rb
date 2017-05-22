@@ -8,6 +8,7 @@ class TasksController < ApplicationController
     respond_to do |format|
       format.json { render json: @task.to_json(include_id: true) }
     end
+    broadcast_new_task
   end
 
   # PUT /tasks/:id
@@ -25,6 +26,25 @@ class TasksController < ApplicationController
 
   private
 
+  def broadcast_new_task
+    ActionCable.server.broadcast @task.channel_name,
+                                 id: @task.id,
+                                 label: @task.label,
+                                 numerator: @task.numerator,
+                                 denominator: @task.denominator,
+                                 unit: @task.unit,
+                                 event_type: 'new'
+  end
+
+  def broadcast_updated_task
+    ActionCable.server.broadcast @task.channel_name,
+                                 id: @task.id,
+                                 numerator: @task.numerator,
+                                 denominator: @task.denominator,
+                                 unit: @task.unit,
+                                 event_type: 'update'
+  end
+
   def update_task(update_params)
     # Yep, we choose for you if you send multiple update params
     if update_params[:numerator]
@@ -34,5 +54,6 @@ class TasksController < ApplicationController
     elsif update_params[:decrement_by]
       @task.decrement_numerator_by(update_params[:decrement_by])
     end
+    broadcast_updated_task
   end
 end
