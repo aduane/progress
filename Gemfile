@@ -2,14 +2,15 @@
 
 source 'https://rubygems.org'
 
-ruby '2.4.0'
+ruby '2.6.1'
 
+gem 'bootsnap'
 gem 'coffee-rails', '~> 4.2'
 gem 'haml-rails'
 gem 'jquery-rails'
 gem 'pg'
 gem 'puma', '~> 3.7'
-gem 'rails', '~> 5.1.1'
+gem 'rails', '~> 5.2.2'
 gem 'redis', '~> 3.0'
 gem 'sass-rails', '~> 5.0'
 gem 'uglifier', '>= 1.3.0'
